@@ -1,0 +1,79 @@
+import pygame
+from bfs import bfs
+
+# Initialize Pygame
+pygame.init()
+
+# Set screen dimensions
+width, height = 800, 600
+screen = pygame.display.set_mode((width, height))
+
+# Set window title
+pygame.display.set_caption("My First Pygame Window")
+G = [
+    [1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1],
+    [1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0],
+    [0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1],
+    [1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1],
+    [0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0],
+    [1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1],
+    [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0],
+    [1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1],
+    [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+    [1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
+    [0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0],
+    [0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1]
+]
+
+
+source=(0,0)
+dest=(14,14)
+prev=bfs(G,source,dest)
+if prev is None:
+    print("No valid path possible!")
+row=len(G)
+column=len(G[0])
+rect_width=width/column
+rect_height=height/row
+start_x=rect_width/2
+start_y=rect_height/2
+
+# Main loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:  # Close window if X button is pressed
+            running = False
+
+    # Fill the screen with a color (RGB)
+    screen.fill((0, 0, 0))  # Blue background
+
+    for m in range(row):
+        for n in range(column):
+            rect_x = n * rect_width
+            rect_y = m * rect_height
+            rect = pygame.Rect(rect_x, rect_y, rect_width, rect_height)
+
+            if prev is not None and (m,n) in prev:
+                if (m,n)==source:
+                    pygame.draw.rect(screen, (255, 0, 0), rect)  # Filled white rectangle
+                elif (m,n)==dest:
+                    pygame.draw.rect(screen, (255, 0, 0), rect)  # Filled white rectangle
+                else:
+                    pygame.draw.rect(screen, (0, 255,0), rect)  # Filled white rectangle
+
+            elif G[m][n] == 1:
+                pygame.draw.rect(screen, (255, 255, 255), rect)  # Filled white rectangle
+            
+            pygame.draw.rect(screen, (0, 0, 0), rect, 3)  # Green border with thickness 3
+
+
+
+    # Update the display
+    pygame.display.flip()
+
+# Quit Pygame
+pygame.quit()
